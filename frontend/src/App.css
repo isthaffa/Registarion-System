@@ -1,0 +1,7 @@
+@import url('./pages/style.css');
+.ant-input{
+    border-radius: 20px;
+  }
+.form-input1 {
+    border-radius: 22px;
+  }
