@@ -2,5 +2,6 @@ const {registerUser,login} =require('./userModel')
 
 module.exports={
     registerUser:registerUser,
-    login:login
+    login:login,
+    reset:reset
 }

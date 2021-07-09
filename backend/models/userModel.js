@@ -20,6 +20,14 @@ console.log(email);
   
 }
 
+const reset=async (_id,password)=>{
+    await User.updateOne({
+        _id
+    },{
+        $set:{password:password}
+    })
+}
+
 
 module.exports={registerUser,
-login}
+login,reset}

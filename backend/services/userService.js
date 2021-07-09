@@ -43,7 +43,6 @@ const createUser=async (firstName,lastName,email,password)=>{
               if( bcrypt.compareSync(password,user.password)){
                    
                    const token= jwt.sign({id:user._id,email:user.email},JWT_SECRET,{expiresIn:"1d"})
-                   // return res.json({status:"ok",data:token})
                    
                    console.log(token);
                    return token
@@ -58,6 +57,17 @@ const createUser=async (firstName,lastName,email,password)=>{
 
     }
 
+    const resetService=async(token,password)=>{
+        const user=jwt.verify(token,JWT_SECRET)
+    const _id=user.id
+    const hasedPassword= await bcrypt.hash( password,10)
+
+    return  await userModel.reset(_id,hasedPassword)
+
+
+
+    }
+
 
 
 
@@ -66,5 +76,6 @@ const createUser=async (firstName,lastName,email,password)=>{
 
 module.exports={
     createUser,
-    loginService
+    loginService,
+    resetService
 }

@@ -1,6 +1,7 @@
-const {createUser,loginService}=require('./userService')
+const {createUser,loginService,resetService}=require('./userService')
 
 module.exports={
     createUser:createUser,
-    loginService:loginService
+    loginService:loginService,
+    resetService,resetService
 }
