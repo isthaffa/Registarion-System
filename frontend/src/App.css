@@ -1,7 +1,31 @@
-@import url('./pages/style.css');
+@import url('./containers/style.css');
 .ant-input{
     border-radius: 20px;
   }
 .form-input1 {
     border-radius: 22px;
   }
+
+
+
+  .ant-form-item-label > label.ant-form-item-required:not(.ant-form-item-required-mark-optional)::before {
+    display: none !important;
+    margin-right: 4px;
+    color: #ff4d4f;
+    font-size: 14px;
+    font-family: SimSun, sans-serif;
+    line-height: 1;
+    content: '*';
+}
+.ant-form{
+  width: 96% !important;
+}
+.ant-form-item-label > label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 32px;
+  font-weight: 700 !important;
+  color: rgb(0 0 0 / 85%);
+  font-size: 12px;
+}

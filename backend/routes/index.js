@@ -1,7 +1,8 @@
-const register=require('./register')
-const login=require('./login')
+
+
+const userRouter=require("./User-router")
 
 module.exports={
-    register,
-    login
+  
+    userRouter
 }

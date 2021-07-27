@@ -1,7 +1,9 @@
 const User = require('./user');
 
+
+
 const registerUser=async (firstName,lastName,email,password)=>{
-    await User.create({
+   return await User.create({
         firstName,
         lastName,
         email,
@@ -12,22 +14,36 @@ const registerUser=async (firstName,lastName,email,password)=>{
 
 const login=async (email)=>{
 console.log(email);
-    const user =await User.findOne({email}).lean()
-   
-    return user
+    return await User.findOne({email})
    
 
-  
+}
+const editPassword=async (id)=>{
+    return await User.findById({_id:id})
 }
 
-const reset=async (_id,password)=>{
-    await User.updateOne({
-        _id
-    },{
-        $set:{password:password}
+const forgotPassword=async (email)=>{
+    return await User.findOne({email})
+}
+
+const reset=async (resetPasswordToken)=>{
+    console.log("user",resetPasswordToken)
+    const currentdate=new Date()
+  return   await User.findOne({
+        resetPasswordToken
+       
     })
+ 
+
+
 }
 
+const getUsers=async ()=>{
+    return await User.find()
+}
+const verifyUser=async (email)=>{
+    return await User.findOne({email:email})
+}
 
 module.exports={registerUser,
-login,reset}
+login,forgotPassword,reset,editPassword,getUsers,verifyUser}

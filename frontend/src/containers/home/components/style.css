@@ -1,0 +1,14 @@
+.ok-button{
+    display: none !important;
+}
+.add-button{
+    background-color: #001529;
+}
+
+.edit-form{
+    margin-top: 15% !important;
+}
+
+.cancel{
+    margin-left: 1%;
+}
