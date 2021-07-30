@@ -1,0 +1,29 @@
+{
+  "name": "user-service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.14.8",
+    "@babel/plugin-transform-modules-commonjs": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.14.5",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.14.8",
+    "babel-loader": "^8.2.2",
+    "webpack": "^5.47.0"
+  },
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.23.0",
+    "@aws-sdk/util-dynamodb": "^3.23.0",
+    "aws-sdk": "^2.956.0",
+    "js-yaml-loader": "^1.2.2",
+    "serverless-iam-roles-per-function": "^3.2.0",
+    "serverless-webpack": "^5.5.1"
+  }
+}
