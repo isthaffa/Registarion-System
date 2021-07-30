@@ -3,7 +3,10 @@ name: Deploy main branch
 on:
   push:
 
-    branches: [serverless]
+    branches: [main]
+    
+  pull_request:
+    branches: [ main ]
 
 
 jobs:
