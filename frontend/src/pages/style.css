@@ -1,0 +1,85 @@
+body{
+  background-color: #bbbbbb !important;
+}
+
+.btnn{
+    background-color: #282c34;
+  }
+  .ant-form-item-control-input-content {
+    flex: auto;
+    max-width: 71%;
+}
+.ant-input-affix-wrapper{
+  border-radius: 22px !important;
+}
+
+.login{
+  width: 50%;
+  margin-top: 10%;
+
+}
+.ant-btn {
+  border-radius: 10px !important;
+}
+
+
+.head{
+  text-align: center;
+  color: #1890ff;
+  margin-bottom: 10%;
+}
+.wrapper{
+  display: flex;
+  align-items: center;
+  flex-direction: column; 
+  justify-content: center;
+  width: 100%;
+  min-height: 100%;
+  padding: 20px;
+}
+.ant-input {
+  border-radius: 20px !important;
+} 
+.form-wrapper{
+  -webkit-border-radius: 10px 10px 10px 10px;
+  border-radius: 10px 10px 10px 10px;
+  background: #fff;
+  padding: 30px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  padding: 2px;
+  -webkit-box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 30px 60px 0 rgba(0,0,0,0.3);
+  text-align: center;
+}
+
+.form{
+  margin-top: 10%;
+}
+.form-a{
+  text-decoration: none;
+}
+
+.form-footer{
+  justify-content: center;
+  display: grid;
+}
+
+
+#formFooter {
+  background-color: #f6f6f6;
+  border-top: 1px solid #dce8f1;
+  padding: 25px;
+  text-align: center;
+  -webkit-border-radius: 0 0 10px 10px;
+  border-radius: 0 0 10px 10px;
+}
+@media (min-width: 576px) { }
+
+
+@media (min-width: 768px) { }
+
+@media (min-width: 992px) {  }
+
+@media (min-width: 1200px) { }
