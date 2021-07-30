@@ -2,8 +2,7 @@ name: Deploy main branch
 
 on:
   push:
-    branches:
-      - serverless
+    branches: [serverless]
 
 jobs:
   deploy:
