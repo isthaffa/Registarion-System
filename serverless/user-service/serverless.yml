@@ -11,22 +11,60 @@ provider:
   lambdaHashingVersion: 20201221
   stage: dev
   region: ap-south-1
+  apiKeys:
+      - user-register-apikey
   # memorySize: 128
   # timeout: 30 
   environment:
       DYNAMODB_TABLE_NAME: ${self:custom.dynamoTableName}
-  
+      JWT_SECRET: "!@!bloodyhell!@!"
+  iam:
+    role:
+      statements:
+          - Effect: Allow
+            Action:
+              - lambda:InvokeFunction
+              - lambda:InvokeAsync
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - dynamodb:Query
+              - dynamodb:GetItem
+              - dynamodb:PutItem
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:BatchGetItem
+              - dynamodb:Scan
+            # Resource: !GetAtt UsersTable.Arn
+            Resource:
+              - "Fn::GetAtt": [ UsersTable, Arn ]
+
 custom:
-  dynamoTableName: post-table-${self:provider.stage}
+  dynamodb:
+    stages: 
+      - dev
+    start:
+      port: 8000  
+      migrate: true
+      inMemory: true
+      heapInitial: 200m
+      heapMax: 1g
+      convertEmptyValues: true
+      seed: true
+  serverless-offline:
+    host: 0.0.0.0
+    resourceRoutes: true
+  dynamoTableName: users-table-${self:provider.stage}
   webpack:
     webpackConfig: 'webpack.config.js' # Name of webpack configuration file
-    includeModules: false # Node modules configuration for packaging
+    # includeModules: false # Node modules configuration for packaging
     packager: 'npm' # Packager that will be used to package your external modules
     excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
 
 plugins:
   - serverless-webpack
-  - serverless-iam-roles-per-function 
+  - serverless-offline
+  - serverless-dynamodb-local
 
 
             
@@ -61,76 +99,62 @@ package:
 #    - include-me-dir/**
 
 functions:
-  getPosts:
-    handler: api.getPost
-    name: get-post
-    memorySize: 128
-    timeout: 5
-    events:
-      - http:
-          path: post/{postId}
-          method: GET
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:GetItem"
-        Resources: !GetAtt PostsTable.Arn
-  createPost:
-    handler: api.updatePost
-    name: update-post
-    memorySize: 128
-    timeout: 5
-    events: 
-      - http:
-         path: post/{postId}
-         method: PUT
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:UpdateItem"
-        Resources: !GetAtt PostsTable.Arn
-  updatePost:
-    handler: api.createPost
-    name: create-post
-    memorySize: 128
-    timeout: 5
-    events: 
-      - http:
-         path: post
-         method: POST
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:PutItem"
-        Resources: !GetAtt PostsTable.Arn
-  deletePost:
-    handler: api.deletePost
-    name: delete-post
-    memorySize: 128
-    timeout: 5
-    events: 
-      - http:
-         path: post/{postId}
-         method: DELETE
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:PutItem"
-        Resources: !GetAtt PostsTable.Arn
-  getAllPost:
-    handler: api.getAllPost
-    name: get-all-post
-    memorySize: 128
-    timeout: 5
-    events: 
-      - http:
-         path: post
-         method: GET
-    iamRoleStatements:
-      - Effect: "Allow"
-        Action:
-          - "dynamodb:Scan"
-        Resources: !GetAtt PostsTable.Arn
+    health:
+      handler: routes.health
+      name: user-health
+      memorySize: 128
+      timeout: 5
+      events:
+        - http:
+            cors: true
+            path: health
+            method: get
+            private: true
+
+    register:
+      handler: routes.register
+      name: user-register
+      memorySize: 128
+      timeout: 5
+      events: 
+        - http:
+            cors: true
+            path: register
+            method: post
+
+    login:
+      handler: routes.login
+      name: user-login
+      memorySize: 128
+      timeout: 5
+      events: 
+        - http:
+            cors: true
+            path: login
+            method: post
+
+    verify:
+      handler: routes.verify
+      name: user-verify
+      memorySize: 128
+      timeout: 5
+      events: 
+        - http:
+            cors: true
+            path: verify
+            method: post
+
+    resetPassword:
+      handler: routes.resetPassword
+      name: reset-password
+      memorySize: 128
+      timeout: 5
+      events: 
+        - http:
+           cors: true
+           path: reset-password
+           method: post
+
 
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
@@ -175,16 +199,26 @@ functions:
 
 resources:
   Resources:
-    PostsTable:
+    UsersTable:
       Type: AWS::DynamoDB::Table
       Properties:
         TableName: ${self:custom.dynamoTableName}
         AttributeDefinitions:
-          -AttributeName: postId
-           AttributeType: S
+          - AttributeName: email
+            AttributeType: S
         KeySchema:
-          -AttributeName: postId
-           keyType: HASH
+          - AttributeName: email
+            KeyType: HASH
+        # GlobalSecondaryIndexes:
+        #   - IndexName: emailIndex
+        #     KeySchema:
+        #       - AttributeName: email
+        #         KeyType: S
+        #     Projection:
+        #       ProjectionType: 'ALL'
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
 # you can add CloudFormation resource templates here
 #resources:
 #  Resources:
