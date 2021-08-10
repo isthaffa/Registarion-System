@@ -1,31 +1,27 @@
 const express=require('express')
 require("dotenv").config();
+const connectDB=require('./config/db')
+const errorHandler=require('./middlewares/errorHandler')
+
 const User=require('./routes')
-const reset=require('./routes/reset-password')
+
+
 
 var cors = require('cors')
 
-
-
-const mongoose=require('mongoose')
 
 const app=express();
 
 app.use(cors())
 
 //mongodb connection
-dbUrl= process.env.DB
-mongoose.connect(dbUrl,
-  {useNewUrlParser:true,
-  useUnifiedTopology:true,
-  useCreateIndex:true})
-.then(()=>{
-  console.log(" db connected");
-})
-.catch(err=>console.log(err))
+try {
+  connectDB()
+  
+} catch (error) {
+  console.log("mongo: ",error);
+}
 
-
-// API_URL=`${process.env.BASE_URL}/users`
 
 
 
@@ -35,10 +31,10 @@ mongoose.connect(dbUrl,
 app.use(express.json())
 
 
+app.use(User.userRouter)
 
-app.use(User.register)
-app.use(User.login)
 
+app.use(errorHandler)
 app.use((req,res,next)=>{
   res.status(404).send('not found')
 })

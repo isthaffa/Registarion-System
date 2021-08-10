@@ -2,45 +2,68 @@ import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import {Link} from 'react-router-dom'
-import Swal from 'sweetalert2'
+import { useSelector } from "react-redux";
+import { useDispatch} from 'react-redux';
+import "../../style.css";
+import auth from "../../../auth/auth";
+import { userLoginRequest } from "../actions";
 
 
-import "./style.css";
-import axios from "axios";
-import auth from "../auth";
+
 function Login(props) {
 
+  const dispatch = useDispatch();
+  const obj=useSelector(state=>state.userReducer)
 
+  useEffect(()=>{
+    if(localStorage.token){
+      props.history.push("/")
+    } 
+  },[props.history])
+ 
   const authHandler=()=>{
+   
     auth.login(()=>{
       props.history.push("/")
     })
   }
-  const [form] = Form.useForm();
 
+  const formItemLayout = {
+    labelCol: {
+      xs: {
+        span: 20,
+      },
+      sm: {
+        span: 5,
+      },
+    },
+    wrapperCol: {
+      xs: {
+        span: 24,
+      },
+      sm: {
+        span: 24,
+      },
+    },
+  };
+  const tailFormItemLayout = {
+    wrapperCol: {
+      xs: {
+        span: 24,
+        offset: 0,
+      },
+      sm: {
+        span: 8,
+        offset: 8,
+      },
+    },
+  };
   // To disable submit button at the beginning.
 
   const onFinish = async (values) => {
-    const headers = {
-      "Content-Type": "application/json",
-    };
-    await axios
-      .post("http://localhost:8080/login", JSON.stringify(values), { headers })
-      .then((res) => {
-        if (res.data.status === "ok") {
-          localStorage.setItem("token", res.data.data);
-         authHandler()
-        }
-        if (res.data.error === "Invalid Login") {
-          // alert("Inavlid Username/Password");
-          Swal.fire('Error', 'Invalid username/password', 'error')
+   dispatch(userLoginRequest({values,authHandler}))
 
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+  }
 
   return (
     <div className="container-fluid wrapper ">
@@ -51,6 +74,7 @@ function Login(props) {
         <h2 className="head">Sign in</h2>
       </div>
         <Form
+        {...formItemLayout}
           name="normal_login"
           className="login-form"
           initialValues={{
@@ -59,15 +83,17 @@ function Login(props) {
           onFinish={onFinish}
         >
           <Form.Item
+             label="Email"
             name="email"
             rules={[
-              {
-                type: "email",
-                message: "The input is not valid E-mail!",
-              },
+             
               {
                 required: true,
                 message: "Please enter your Email!",
+              },
+              {
+                type: "email",
+                message: "The input is not valid E-mail!",
               },
             ]}
           >
@@ -77,12 +103,20 @@ function Login(props) {
             />
           </Form.Item>
           <Form.Item
+           label="Password"
             name="password"
             rules={[
+            
               {
                 required: true,
                 message: "Please enter your Password!",
-              }
+                min:6
+              },
+              {
+                min:6,
+                message:"password must contain minimum six characters"
+              },
+            
               
             ]}
             
@@ -99,12 +133,12 @@ function Login(props) {
               <Checkbox>Remember me</Checkbox>
             </Form.Item>
 
-            <a className="login-form-forgot form-a" href="">
+            <Link className="login-form-forgot form-a" to="/forgot-password">
               Forgot password
-            </a>
+            </Link>
           </Form.Item>
 
-          <Form.Item>
+          <Form.Item  {...tailFormItemLayout}>
             <Button
               type="primary"
               htmlType="submit"
@@ -112,9 +146,9 @@ function Login(props) {
             >
               Log in
             </Button>
-            <span>
-              Or <Link className="form-a" to="/register">register now!</Link></span>
+            
           </Form.Item>
+          <p>don't have an account <span><Link to="/register">Signup</Link></span></p>
           </div>
         </Form>
       </div>

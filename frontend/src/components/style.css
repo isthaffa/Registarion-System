@@ -1,0 +1,8 @@
+.nav-bar{
+    float: right;
+}
+
+.logo{
+    float: left;
+    color: hsl(40, 24%, 93%);
+}
